@@ -38,7 +38,7 @@ pipeline {
 			}
 			steps {
                 sh '''
-                cd avwxora2pg
+                #cd avwxora2pg
                 mvn deploy -Dmaven.test.skip=true
                 '''
             }
