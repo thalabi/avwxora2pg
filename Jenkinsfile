@@ -19,7 +19,7 @@ pipeline {
         stage ('Build') {
             steps {
                 sh '''
-                cd avwxora2pg
+                #cd avwxora2pg
                 mvn clean package
                 '''
             }
