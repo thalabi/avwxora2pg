@@ -66,7 +66,7 @@ public class MetarJobLaunchController {
         if (execution.getJobId() == null || execution.getJobId() == 0l) {
         	return ResponseEntity.ok("Job status not available");
         } else {
-        	return ResponseEntity.ok("Job status: " + execution.getStatus());
+        	return ResponseEntity.ok(execution.getStatus().toString());
         }
     }
 
