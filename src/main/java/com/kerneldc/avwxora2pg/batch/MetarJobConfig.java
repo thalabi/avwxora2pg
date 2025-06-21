@@ -11,6 +11,7 @@ import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -21,18 +22,20 @@ import com.kerneldc.avwxora2pg.domain.Metar;
 @EnableBatchProcessing
 public class MetarJobConfig {
 
+	@Value("${write.chunk.size}")
+	private int chunkSize;
+
     @Bean
     public Step metarLoadStep(JobRepository jobRepository,
                           PlatformTransactionManager transactionManager,
                           ItemReader<Metar> metarReader,
+                          MetarReadStepListener metarReadStepListener, 
                           ItemProcessor<Metar, Metar> metarProcessor,
                           ItemWriter<Metar> metarWriter,
                           ChunkListener loggingChunkListener) {
 
-    	MetarReadStepListener metarReadStepListener = new MetarReadStepListener();
-    	
         return new StepBuilder("metarLoadStep", jobRepository)
-                .<Metar, Metar>chunk(1000000, transactionManager)
+                .<Metar, Metar>chunk(chunkSize, transactionManager)
                 .reader(metarReader)
                 .processor(metarProcessor)
                 .writer(metarWriter)

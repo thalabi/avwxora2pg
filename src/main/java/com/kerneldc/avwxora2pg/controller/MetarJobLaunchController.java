@@ -51,9 +51,11 @@ public class MetarJobLaunchController {
     	            e.printStackTrace();
     	        }
     	    }).start();
-    	 return ResponseEntity.ok("Job started with ID: " + jobId);
+    	 return ResponseEntity.ok(jobId);
     }
 
+    // curl http://localhost:6007/metarJobLaunchController/metarJobStatus?jobId=463c4d72-ff82-4343-aba5-ff93ac78e655
+    
     @GetMapping("/metarJobStatus")
     public ResponseEntity<String> metarJobStatus(@RequestParam String jobId) {
     	LOGGER.info("jobInfoMap size [{}]", jobInfoMap.size());
@@ -67,4 +69,5 @@ public class MetarJobLaunchController {
         	return ResponseEntity.ok("Job status: " + execution.getStatus());
         }
     }
+
 }

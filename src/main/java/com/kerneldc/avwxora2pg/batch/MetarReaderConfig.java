@@ -22,6 +22,9 @@ import com.kerneldc.avwxora2pg.domain.Metar;
 @Configuration
 public class MetarReaderConfig {
 
+	@Value("${read.page.size}")
+	private int pageSize;
+
     @StepScope
     @Bean
     public JdbcPagingItemReader<Metar> metarReader(
@@ -34,7 +37,7 @@ public class MetarReaderConfig {
 
         JdbcPagingItemReader<Metar> reader = new JdbcPagingItemReader<>();
         reader.setDataSource(dataSource);
-        reader.setPageSize(1000000);
+        reader.setPageSize(pageSize);
         reader.setRowMapper(new BeanPropertyRowMapper<>(Metar.class));
 
         Map<String, Object> parameterValues = new HashMap<>();
