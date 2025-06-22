@@ -17,6 +17,10 @@ public class MetarReadListener implements ItemReadListener<Metar> {
 
 	private int count = 0;
 
+	public void resetCount() {
+		count = 0;
+	}
+	
     @Override
     public void beforeRead() {
         // optional: log start of reading

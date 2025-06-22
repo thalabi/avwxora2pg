@@ -10,8 +10,8 @@ public class MetarReadStepListener extends MetarReadListener implements StepExec
 
 	@Override
     public void beforeStep(StepExecution stepExecution) {
-        // No action needed
-    }
+		resetCount();
+	}
 
     @Override
     public ExitStatus afterStep(StepExecution stepExecution) {
