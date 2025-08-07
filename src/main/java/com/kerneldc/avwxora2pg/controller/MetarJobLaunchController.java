@@ -29,9 +29,10 @@ public class MetarJobLaunchController {
 
 	private final JobLauncher jobLauncher;
     private final Job metarJob;
+    private final Job metarUpdateJob;
     private Map<String, JobExecution> jobInfoMap = new ConcurrentHashMap<>();
     
-    // curl -X POST "http://localhost:6007/metarJobLaunchController/launchMetarJob?yearMonth=2025-03"
+    // curl -X POST "http://localhost:6007/metarJobLaunchController/launchMetarJob?yearMonth=2025-06"
 
     @PostMapping("/launchMetarJob")
     public ResponseEntity<String> launchMetarJob(@RequestParam String yearMonth) {
@@ -54,6 +55,30 @@ public class MetarJobLaunchController {
     	 return ResponseEntity.ok(jobId);
     }
 
+    // curl -X POST "http://localhost:6007/metarJobLaunchController/launchMetarUpdateJob?yearMonth=2025-06"
+
+    @PostMapping("/launchMetarUpdateJob")
+    public ResponseEntity<String> launchMetarUpdateJob(@RequestParam String yearMonth) {
+    	String jobId = UUID.randomUUID().toString();
+    	JobParameters jobParameters = new JobParametersBuilder()
+    			.addDate("runDate", new Date())  // to ensure uniqueness
+    			.addString("yearMonth", yearMonth)
+    			.addString("jobId", jobId)
+    			.toJobParameters();
+    	
+    	 new Thread(() -> {
+    	        try {
+    	        	jobInfoMap.put(jobId, new JobExecution(0l)); // put a placeholder
+    	        	var jobExecution = jobLauncher.run(metarUpdateJob, jobParameters);
+    	        	jobInfoMap.put(jobId, jobExecution);
+    	        } catch (Exception e) {
+    	            e.printStackTrace();
+    	        }
+    	    }).start();
+    	 return ResponseEntity.ok(jobId);
+    }
+
+    
     // curl http://localhost:6007/metarJobLaunchController/metarJobStatus?jobId=463c4d72-ff82-4343-aba5-ff93ac78e655
     
     @GetMapping("/metarJobStatus")
